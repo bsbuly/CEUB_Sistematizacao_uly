@@ -1,5 +1,5 @@
 import pandas as pd
-
+# Ajuste de documentação
 df = pd.read_csv("data/municipios_renda.csv", sep=",", encoding="utf-8")
 print("Formato (linhas, colunas):", df.shape)
 print()
