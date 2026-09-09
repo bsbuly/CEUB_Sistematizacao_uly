@@ -117,6 +117,14 @@ eixo3.set_title(f"Distribuição de {coluna_cat_escolhida}")
 plt.xticks(rotation=90)
 st.pyplot(figura3)
 
+st.subheader("Gráfico de Pizza")
+
+figura_pizza, eixo_pizza = plt.subplots()
+eixo_pizza.pie(valores, labels=categorias, autopct="%1.1f%%")
+eixo_pizza.set_title(f"Distribuição de {coluna_cat_escolhida}")
+
+st.pyplot(figura_pizza)
+
 st.subheader("Lei dos Grandes Números")
 
 numero_lancamentos = st.slider("Número de lançamentos da moeda:", min_value=10, max_value=5000, value=100)
