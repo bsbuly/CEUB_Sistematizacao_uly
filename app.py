@@ -61,6 +61,15 @@ eixo.set_title(f"Distribuição de {coluna_escolhida}")
 
 st.pyplot(figura)
 
+st.subheader("Boxplot")
+
+figura_boxplot, eixo_boxplot = plt.subplots()
+eixo_boxplot.boxplot(dados_da_coluna)
+eixo_boxplot.set_ylabel(coluna_escolhida)
+eixo_boxplot.set_title(f"Boxplot de {coluna_escolhida}")
+
+st.pyplot(figura_boxplot)
+
 outliers_encontrados = ms.detectar_outliers(dados_da_coluna)
 
 st.subheader("Detecção de Outliers")
