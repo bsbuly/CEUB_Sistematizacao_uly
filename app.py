@@ -61,6 +61,15 @@ eixo.set_title(f"Distribuição de {coluna_escolhida}")
 
 st.pyplot(figura)
 
+st.subheader("Boxplot")
+
+figura_boxplot, eixo_boxplot = plt.subplots()
+eixo_boxplot.boxplot(dados_da_coluna)
+eixo_boxplot.set_ylabel(coluna_escolhida)
+eixo_boxplot.set_title(f"Boxplot de {coluna_escolhida}")
+
+st.pyplot(figura_boxplot)
+
 outliers_encontrados = ms.detectar_outliers(dados_da_coluna)
 
 st.subheader("Detecção de Outliers")
@@ -107,6 +116,14 @@ eixo3.set_title(f"Distribuição de {coluna_cat_escolhida}")
 
 plt.xticks(rotation=90)
 st.pyplot(figura3)
+
+st.subheader("Gráfico de Pizza")
+
+figura_pizza, eixo_pizza = plt.subplots()
+eixo_pizza.pie(valores, labels=categorias, autopct="%1.1f%%")
+eixo_pizza.set_title(f"Distribuição de {coluna_cat_escolhida}")
+
+st.pyplot(figura_pizza)
 
 st.subheader("Lei dos Grandes Números")
 
