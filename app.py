@@ -281,7 +281,7 @@ if arquivo is not None:
                     else:
                         interpretacao = "aproximadamente simétrica"
 
-                st.write(f"Interpretação automática: a distribuição de `{coluna_numerica}` é {interpretacao} (coeficiente de assimetria = {assimetria_calculada:.2f}).")
+                    st.write(f"Interpretação automática: a distribuição de `{coluna_numerica}` é {interpretacao} (coeficiente de assimetria = {assimetria_calculada:.2f}).")
 
             # estatística para as medidas de dispersão
             elif escolha == "Medidas de Associação":
