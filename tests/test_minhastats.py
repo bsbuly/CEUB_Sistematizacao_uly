@@ -1,107 +1,82 @@
-import sys
-import os
 import math
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
-
-import minhastats as ms
 import numpy as np
+import scipy.stats as stats
+import src.minhastats as ms
 
-from scipy import stats
+#from minhastats import media, mediana, moda, amplitude, variancia, desvio_padrao, coeficiente_variacao, percentil, quartis, covariancia, correlacao
+
+
+# testes automatizados com tolerância númerica documentada
+# (rtol=1e-8) 
 
 def test_media():
-    dados = [10, 20, 30, 40]
-
-    resultado_meu = ms.media(dados)
-    resultado_numpy = np.mean(dados)
-
-    assert math.isclose(resultado_meu, resultado_numpy)
+    dados = [1, 2, 3, 4, 5]
+    assert math.isclose(ms.media(dados), np.mean(dados), rel_tol=1e-8)
 
 def test_mediana():
-    dados = [10, 20, 30, 40]
+    dados = [1, 2, 3, 4, 5]
+    assert math.isclose(ms.mediana(dados), np.median(dados), rel_tol=1e-8)
 
-    resultado_meu = ms.mediana(dados)
-    resultado_numpy = np.median(dados)
-
-    assert math.isclose(resultado_meu, resultado_numpy)
-
-def test_variancia_amostral():
-    dados = [10, 20, 30, 40]
-
-    resultado_meu = ms.variancia(dados, "amostral")
-    resultado_numpy = np.var(dados, ddof=1)
-
-    assert math.isclose(resultado_meu, resultado_numpy)
-
-def test_variancia_populacional():
-    dados = [10, 20, 30, 40]
-
-    resultado_meu = ms.variancia(dados, "populacional")
-    resultado_numpy = np.var(dados, ddof=0)
-
-    assert math.isclose(resultado_meu, resultado_numpy)
-
-def test_desvio_padrao():
-    dados = [10, 20, 30, 40]
-
-    resultado_meu = ms.desvio_padrao(dados, "amostral")
-    resultado_numpy = np.std(dados, ddof=1)
-    
-    assert math.isclose(resultado_meu, resultado_numpy)
+def test_moda():
+    dados = [1, 2, 2, 3, 3, 3, 4]
+    assert set(ms.moda(dados)) == set(stats.mode(dados, keepdims=True).mode)
 
 def test_amplitude():
     dados = [10, 20, 30, 40]
+    assert math.isclose(ms.amplitude(dados), np.ptp(dados), rel_tol=1e-8)
 
-    resultado_meu = ms.amplitude(dados)
-    resultado_numpy = np.max(dados) - np.min(dados)
+def test_variancia_populacional():
+    dados = [1, 2, 3, 4, 5]
+    populacional = True
+    assert math.isclose(ms.variancia(dados, populacional), np.var(dados, ddof=0), rel_tol=1e-8)
 
-    assert math.isclose(resultado_meu, resultado_numpy)
+def test_variancia_amostral():
+    dados = [1, 2, 3, 4, 5]
+    populacional = False
+    assert math.isclose(ms.variancia(dados, populacional), np.var(dados, ddof=1), rel_tol=1e-8)
 
-def test_percentil_25():
-    dados = [10, 20, 30, 40, 50]
+def test_desvio_padrao_populacional():
+    dados = [1, 2, 3, 4, 5]
+    populacional = True
+    assert math.isclose(ms.desvio_padrao(dados, populacional), np.std(dados, ddof=0), rel_tol=1e-8)
 
-    resultado_meu = ms.percentil(dados, 25)
-    resultado_numpy = np.percentile(dados, 25)
-
-    assert math.isclose(resultado_meu, resultado_numpy)
-
-def test_percentil_75():
-    dados = [10, 20, 30, 40, 50]
-
-    resultado_meu = ms.percentil(dados, 75)
-    resultado_numpy = np.percentile(dados, 75)
-
-    assert math.isclose(resultado_meu, resultado_numpy)
+def test_desvio_padrao_amostral():
+    dados = [1, 2, 3, 4, 5]
+    populacional = False
+    assert math.isclose(ms.desvio_padrao(dados, populacional), np.std(dados, ddof=1), rel_tol=1e-8)
 
 def test_coeficiente_variacao():
-    dados = [10, 20, 30, 40]
+    dados = [10, 20, 30, 40, 50]
+    esperado = (np.std(dados, ddof=1) / np.mean(dados)) * 100
+    populacional = False
+    assert math.isclose(ms.coeficiente_variacao(dados, populacional), esperado, rel_tol=1e-8)
 
-    resultado_meu = ms.coeficiente_variacao(dados, "amostral")
-    resultado_numpy = (np.std(dados, ddof=1) / abs(np.mean(dados))) * 100
+def test_percentil():
+    dados = [15, 20, 35, 40, 50]
+    for p in [25, 50, 75]:
+        assert math.isclose(ms.percentil(dados, p), np.percentile(dados, p), rel_tol=1e-8)
 
-    assert math.isclose(resultado_meu, resultado_numpy)
+def test_quartis():
+    dados = [15, 20, 35, 40, 50]
+    q1, q2, q3 = ms.quartis(dados)
+    np_q1, np_q2, np_q3 = np.percentile(dados, [25, 50, 75])
+    assert math.isclose(q1, np_q1, rel_tol=1e-8)
+    assert math.isclose(q2, np_q2, rel_tol=1e-8)
+    assert math.isclose(q3, np_q3, rel_tol=1e-8)
 
-def test_moda():
-    dados = [1, 1, 2, 2, 3]
+def test_covariancia_amostral():
+    x = [2, 4, 6, 8]
+    y = [1, 3, 5, 7]
+    populacional = False
+    assert math.isclose(ms.covariancia(x, y, populacional), np.cov(x, y, ddof=1)[0,1], rel_tol=1e-8)
 
-    resultado_meu = ms.moda(dados)
-
-    assert resultado_meu == [1, 2]
-
-def test_covariancia():
-    x = [10, 20, 30, 40]
-    y = [1000, 1500, 1300, 2000]
-
-    resultado_meu = ms.covariancia(x, y, "amostral")
-    resultado_numpy = np.cov(x, y, ddof=1)[0][1]
-
-    assert math.isclose(resultado_meu, resultado_numpy)
+def test_covariancia_populacional():
+    x = [2, 4, 6, 8]
+    y = [1, 3, 5, 7]
+    populacional = True
+    assert math.isclose(ms.covariancia(x, y, populacional), np.cov(x, y, ddof=0)[0,1], rel_tol=1e-8)
 
 def test_correlacao():
-    x = [10, 20, 30, 40]
-    y = [1000, 1500, 1300, 2000]
-
-    resultado_meu = ms.correlacao(x, y)
-    resultado_scipy, _ = stats.pearsonr(x, y)
-
-    assert math.isclose(resultado_meu, resultado_scipy)
+    x = [2, 4, 6, 8]
+    y = [1, 3, 5, 7]
+    assert math.isclose(ms.correlacao(x, y), stats.pearsonr(x, y)[0], rel_tol=1e-8)
