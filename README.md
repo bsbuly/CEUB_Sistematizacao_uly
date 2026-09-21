@@ -11,21 +11,21 @@ A aplicação — o "Laboratório Estatístico Interativo" — carrega a base de
 municípios e permite explorar, de forma interativa, estatística descritiva,
 distribuições e simulações. Está organizada em módulos:
 
+- **`implementação de seleção de arquivos`** — .csv, .xlsx, .json
+- **`implementação de responsividade`** — as estatísticas são mostradas a escolha do usuário
+
 - **`src/minhastats.py`** — biblioteca de estatística implementada do zero
   (sem `numpy`, `statistics` ou `scipy`): média, mediana, moda, amplitude,
   variância e desvio padrão (amostral e populacional), percentis e quartis,
   coeficiente de variação, covariância, correlação de Pearson, além de detecção
-  de outliers (regra do IQR) e tabela de frequências.
-- **`src/dados.py`** — carga do dataset e seleção de séries numéricas e
-  categóricas.
-- **`src/distribuicoes.py`** — densidade e ajuste das distribuições Normal e
-  Exponencial.
-- **`src/simulacao.py`** — simulações da Lei dos Grandes Números (lançamentos
-  de moeda) e do Teorema Central do Limite (médias amostrais).
+  de outliers (regra do IQR) e tabela de frequências. Também há densidade e ajuste das distribuições Normal e
+  Exponencial e as simulações da Lei dos Grandes Números (lançamentos
+  de moeda) e do Teorema Central do Limite (médias amostrais)
+
+
 - **`tests/test_minhastats.py`** — testes automatizados comparando cada função
   com NumPy/SciPy.
-- **`explorar.py`** — análise exploratória inicial da base (formato, tipos,
-  nulos, duplicados, contagem por região).
+
 - **`app.py`** — interface Streamlit que integra todos os módulos.
 
 ### O que a interface oferece
